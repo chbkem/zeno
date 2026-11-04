@@ -16,7 +16,7 @@ export const analyzeSpending = createServerFn({ method: "POST" })
     return { ...input, recent: (input.recent ?? []).slice(0, 60) };
   })
   .handler(async ({ data }) => {
-    const key = process.env["GEMINI_API_KEY"];
+    const key = process.env["GEMINI_API_KEY"] ?? process.env["GOOGLE_API_KEY"];
     if (!key) return { ok: false as const, text: "Gemini API key is not set up yet." };
     const prompt = `You are Zeno, a friendly money coach for Nigerian undergraduate students. Amounts are in Naira (₦).
 Analyse this student's spending for ${data.month} and reply in markdown with exactly these sections:
