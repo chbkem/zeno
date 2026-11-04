@@ -24,7 +24,7 @@ function Index() {
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
   useEffect(() => {
-    if (!isFirebaseConfigured) return setUser(null);
+    if (!isFirebaseConfigured) { setUser(null); return; }
     return onAuthStateChanged(fb().auth, setUser);
   }, []);
 

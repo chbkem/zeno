@@ -122,7 +122,7 @@ function Panel({ title, children, action }: { title: string; children: React.Rea
 function AddTransaction({ uid }: { uid: string }) {
   const [type, setType] = useState<TxType>("expense");
   const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState(EXPENSE_CATEGORIES[0]);
+  const [category, setCategory] = useState<string>(EXPENSE_CATEGORIES[0]!);
   const [note, setNote] = useState("");
   const [date, setDate] = useState(today());
   const cats = type === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
@@ -130,7 +130,7 @@ function AddTransaction({ uid }: { uid: string }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const n = Number(amount);
-    if (!n || n <= 0) return toast.error("Enter an amount above ₦0");
+    if (!n || n <= 0) { toast.error("Enter an amount above ₦0"); return; }
     await addDoc(collection(fb().db, "users", uid, "transactions"), { type, amount: n, category, note, date });
     setAmount("");
     setNote("");
@@ -149,7 +149,7 @@ function AddTransaction({ uid }: { uid: string }) {
               className="flex-1 capitalize"
               onClick={() => {
                 setType(t);
-                setCategory((t === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES)[0]);
+                setCategory((t === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES)[0]!);
               }}
             >
               {t}
@@ -278,7 +278,7 @@ function AIInsights({ month, s, budgets, txs }: { month: string; s: ReturnType<t
   const [loading, setLoading] = useState(false);
 
   const run = async () => {
-    if (txs.length === 0) return toast.error("Record a few transactions first");
+    if (txs.length === 0) { toast.error("Record a few transactions first"); return; }
     setLoading(true);
     try {
       const r = await analyze({
