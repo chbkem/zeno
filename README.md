@@ -1,14 +1,18 @@
-# Welcome to your Lovable project
+# Naija Student Wallet
+
+Build out a budgeting app for nigerian undergraduate students called Zeno. 
+
+It should help them track their income and expenses, understand their spending habits, and make better financial decisions. The solution is to build a simple dashboard that records transactions, categorizes expenses, and calculates available balances, and monitors monthly budgets. It should use Google Gemini AI, which should analyze user spending patterns, generate financial summaries, and recommend practical ways to minimize unnecessary expenses. Use React for the front end, Tailwind CSS for user interface, Firebase for authentication database, and Google Gemini API for AI-powered analysis.
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/ac2636d2-1489-4ce7-bc45-80ff492d9060).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +24,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
