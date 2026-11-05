@@ -1,0 +1,41 @@
+{
+  "id": "/",
+  "name": "Zeno — Budgeting for Nigerian students",
+  "short_name": "Zeno",
+  "description": "Track your allowance, expenses and monthly budgets in Naira, with AI money tips for campus life.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f9f7ee",
+  "theme_color": "#005e35",
+  "lang": "en-NG",
+  "dir": "ltr",
+  "categories": ["finance", "productivity", "education"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
