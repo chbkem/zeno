@@ -15,8 +15,8 @@ export default defineConfig({
   vite: {
     define: {
       // Publishable Firebase web config values, injected from saved project secrets.
-      "import.meta.env.VITE_FIREBASE_API_KEY": JSON.stringify(process.env["GOOGLE_API_KEY"] ?? ""),
-      "import.meta.env.VITE_FIREBASE_MEASUREMENT_ID": JSON.stringify(
+      "process.env.VITE_FIREBASE_API_KEY": JSON.stringify(process.env["GOOGLE_API_KEY"] ?? ""),
+      "process.env.VITE_FIREBASE_MEASUREMENT_ID": JSON.stringify(
         process.env["GOOGLE_ANALYTICS_MEASUREMENT_ID"] ?? "",
       ),
     },

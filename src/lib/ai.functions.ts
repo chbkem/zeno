@@ -10,14 +10,24 @@ interface Input {
   recent: { type: string; amount: number; category: string; note: string; date: string }[];
 }
 
+// Check for Gemini API key - try multiple env var names
+const GEMINI_KEY =
+  process.env["GEMINI_API_KEY"] ||
+  process.env["GOOGLE_API_KEY"] ||
+  process.env["VITE_GEMINI_API_KEY"];
+
 export const analyzeSpending = createServerFn({ method: "POST" })
   .inputValidator((input: Input) => {
     if (!input || typeof input.month !== "string") throw new Error("Invalid input");
     return { ...input, recent: (input.recent ?? []).slice(0, 60) };
   })
   .handler(async ({ data }) => {
-    const key = process.env["GEMINI_API_KEY"] ?? process.env["GOOGLE_API_KEY"];
-    if (!key) return { ok: false as const, text: "Gemini API key is not set up yet." };
+    const key = GEMINI_KEY ?? process.env["GOOGLE_API_KEY"];
+    if (!key)
+      return {
+        ok: false as const,
+        text: "Gemini API key not configured. Ask admin to set GEMINI_API_KEY env var.",
+      };
     const prompt = `You are Zeno, a friendly money coach for Nigerian undergraduate students. Amounts are in Naira (₦).
 Analyse this student's spending for ${data.month} and reply in markdown with exactly these sections:
 ## Summary (2-3 sentences)

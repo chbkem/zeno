@@ -86,7 +86,7 @@
   --border: oklch(0.89 0.02 110);
   --input: oklch(0.89 0.02 110);
   --ring: oklch(0.42 0.11 158);
-  --gradient-hero: linear-gradient(135deg, oklch(0.32 0.09 160), oklch(0.45 0.12 152));
+  --gradient-hero: linear-gradient(135deg, oklch(0.35 0.1 158), oklch(0.45 0.12 152));
   --shadow-soft: 0 12px 30px -14px oklch(0.3 0.08 160 / 0.35);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);

@@ -47,7 +47,9 @@ export function AuthCard() {
 
   return (
     <div className="w-full max-w-sm rounded-3xl border bg-card p-7 shadow-soft">
-      <h2 className="text-2xl font-bold">{mode === "in" ? "Welcome back" : "Create your account"}</h2>
+      <h2 className="text-2xl font-bold">
+        {mode === "in" ? "Welcome back" : "Create your account"}
+      </h2>
       <p className="mt-1 text-sm text-muted-foreground">
         {mode === "in" ? "Sign in to see your money." : "Takes 20 seconds. No wahala."}
       </p>
@@ -60,11 +62,24 @@ export function AuthCard() {
         )}
         <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            id="email"
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="pw">Password</Label>
-          <Input id="pw" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input
+            id="pw"
+            type="password"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "Please wait…" : mode === "in" ? "Sign in" : "Sign up"}
