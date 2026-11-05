@@ -46,11 +46,17 @@ export function Dashboard({ user }: { user: User }) {
 
   useEffect(() => {
     const q = query(collection(db, "users", user.uid, "transactions"), orderBy("date", "desc"));
-    const unsub1 = onSnapshot(q, (snap) =>
-      setTxs(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Transaction, "id">) }))),
+    const onError = (err: Error) =>
+      toast.error("Couldn't load your data: " + err.message.replace("Firebase: ", ""));
+    const unsub1 = onSnapshot(
+      q,
+      (snap) => setTxs(snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Transaction, "id">) }))),
+      onError,
     );
-    const unsub2 = onSnapshot(doc(db, "users", user.uid, "settings", "budgets"), (snap) =>
-      setBudgets((snap.data() as Record<string, number>) ?? {}),
+    const unsub2 = onSnapshot(
+      doc(db, "users", user.uid, "settings", "budgets"),
+      (snap) => setBudgets((snap.data() as Record<string, number>) ?? {}),
+      onError,
     );
     return () => {
       unsub1();
@@ -131,10 +137,14 @@ function AddTransaction({ uid }: { uid: string }) {
     e.preventDefault();
     const n = Number(amount);
     if (!n || n <= 0) { toast.error("Enter an amount above ₦0"); return; }
-    await addDoc(collection(fb().db, "users", uid, "transactions"), { type, amount: n, category, note, date });
-    setAmount("");
-    setNote("");
-    toast.success(type === "expense" ? "Expense recorded" : "Income recorded");
+    try {
+      await addDoc(collection(fb().db, "users", uid, "transactions"), { type, amount: n, category, note, date });
+      setAmount("");
+      setNote("");
+      toast.success(type === "expense" ? "Expense recorded" : "Income recorded");
+    } catch (err) {
+      toast.error("Couldn't save: " + (err as Error).message.replace("Firebase: ", ""));
+    }
   };
 
   return (
@@ -162,7 +172,7 @@ function AddTransaction({ uid }: { uid: string }) {
         </div>
         <div className="space-y-1.5">
           <Label>Category</Label>
-          <Select value={category} onValueChange={setCategory}>
+          <Select key={type} value={category} onValueChange={(v) => v && setCategory(v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
               {cats.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
@@ -202,7 +212,7 @@ function TransactionList({ uid, txs }: { uid: string; txs: Transaction[] }) {
               <p className={`text-sm font-semibold ${t.type === "income" ? "text-success" : "text-foreground"}`}>
                 {t.type === "income" ? "+" : "−"}{formatNaira(t.amount)}
               </p>
-              <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => deleteDoc(doc(fb().db, "users", uid, "transactions", t.id))}>
+              <Button variant="ghost" size="icon" aria-label="Delete" onClick={() => deleteDoc(doc(fb().db, "users", uid, "transactions", t.id)).catch((err) => toast.error("Couldn't delete: " + (err as Error).message.replace("Firebase: ", "")))}>
                 <Trash2 className="h-4 w-4 text-muted-foreground" />
               </Button>
             </li>
@@ -224,9 +234,13 @@ function Budgets({ uid, budgets, spent }: { uid: string; budgets: Record<string,
   const save = async () => {
     const clean: Record<string, number> = {};
     for (const [k, v] of Object.entries(draft)) if (Number(v) > 0) clean[k] = Number(v);
-    await setDoc(doc(fb().db, "users", uid, "settings", "budgets"), clean);
-    setEditing(false);
-    toast.success("Budgets saved");
+    try {
+      await setDoc(doc(fb().db, "users", uid, "settings", "budgets"), clean);
+      setEditing(false);
+      toast.success("Budgets saved");
+    } catch (err) {
+      toast.error("Couldn't save budgets: " + (err as Error).message.replace("Firebase: ", ""));
+    }
   };
 
   const rows = EXPENSE_CATEGORIES.filter((c) => budgets[c] || spent[c]);

@@ -36,7 +36,12 @@ Data: ${JSON.stringify(data)}`;
       },
     );
     if (!res.ok) {
-      const msg = res.status === 429 ? "Gemini is busy right now. Try again in a minute." : `Gemini error (${res.status}).`;
+      const msg =
+        res.status === 429
+          ? "Gemini is busy right now. Try again in a minute."
+          : res.status === 403
+            ? "The Gemini API isn't enabled for this key's Google Cloud project yet."
+            : `Gemini error (${res.status}).`;
       return { ok: false as const, text: msg };
     }
     const json = (await res.json()) as {
