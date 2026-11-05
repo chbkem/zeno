@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
 import { toast } from "sonner";
 import { fb } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
@@ -46,14 +40,15 @@ export function AuthCard() {
   };
 
   return (
-    <div className="w-full max-w-sm rounded-3xl border bg-card p-7 shadow-soft">
-      <h2 className="text-2xl font-bold">
-        {mode === "in" ? "Welcome back" : "Create your account"}
-      </h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {mode === "in" ? "Sign in to see your money." : "Takes 20 seconds. No wahala."}
-      </p>
-      <form onSubmit={submit} className="mt-6 space-y-4">
+    <div className="w-full space-y-6">
+      <div className="text-center pb-6">
+        <span className="font-display text-3xl font-extrabold text-primary">zeno.</span>
+        <h2 className="mt-2 text-2xl font-bold">Manage your allowance</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Track your expenses, set budgets, and get AI-powered tips to stretch your money till month end.
+        </p>
+      </div>
+      <form onSubmit={submit} className="space-y-6">
         {mode === "up" && (
           <div className="space-y-1.5">
             <Label htmlFor="name">First name</Label>
@@ -62,34 +57,21 @@ export function AuthCard() {
         )}
         <div className="space-y-1.5">
           <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="pw">Password</Label>
-          <Input
-            id="pw"
-            type="password"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <Input id="pw" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "Please wait…" : mode === "in" ? "Sign in" : "Sign up"}
         </Button>
       </form>
-      <Button variant="outline" className="mt-3 w-full" onClick={google}>
+      <Button variant="outline" className="w-full" onClick={google}>
         Continue with Google
       </Button>
       <button
-        className="mt-5 w-full text-center text-sm text-muted-foreground hover:text-foreground"
+        className="w-full text-center text-sm text-muted-foreground hover:text-foreground"
         onClick={() => setMode(mode === "in" ? "up" : "in")}
       >
         {mode === "in" ? "New here? Create an account" : "Already have an account? Sign in"}
