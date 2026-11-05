@@ -25,10 +25,10 @@ export function HomeView({
         <p className="text-sm opacity-80">
           Hi {user.displayName?.split(" ")[0] || "there"}, your available balance
         </p>
-        <p className="mt-1 font-display text-foreground  text-4xl font-extrabold">
+        <p className="mt-1 font-display dark:text-foreground  text-4xl font-extrabold">
           {formatNaira(summary.balance)}
         </p>
-        <div className="mt-5 grid grid-cols-2 gap-3 text-foreground ">
+        <div className="mt-5 grid grid-cols-2 gap-3 dark:text-foreground ">
           <Stat
             icon={<ArrowDownLeft className="h-4 w-4" />}
             label="Income this month"

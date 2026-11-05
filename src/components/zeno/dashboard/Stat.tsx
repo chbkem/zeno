@@ -11,7 +11,7 @@ export function Stat({
 }) {
   return (
     <div className="rounded-2xl bg-primary-foreground/10 p-3">
-      <div className="flex items-center gap-1.5 text-xs text-foreground  opacity-80">
+      <div className="flex items-center gap-1.5 text-xs dark:text-foreground  opacity-80">
         {icon}
         {label}
       </div>
