@@ -1,5 +1,6 @@
 import { AuthCard } from "./AuthCard";
-import { isFirebaseConfigured } from "@/lib/firebase";
+import { fb, isFirebaseConfigured } from "@/lib/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 
 export function AuthScreen() {

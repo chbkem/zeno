@@ -191,8 +191,8 @@ function HomeView({
         <p className="text-sm opacity-80">
           Hi {user.displayName?.split(" ")[0] || "there"}, your available balance
         </p>
-        <p className="mt-1 font-display text-4xl font-extrabold">{formatNaira(summary.balance)}</p>
-        <div className="mt-5 grid grid-cols-2 gap-3">
+        <p className="mt-1 font-display text-foreground  text-4xl font-extrabold">{formatNaira(summary.balance)}</p>
+        <div className="mt-5 grid grid-cols-2 gap-3 text-foreground ">
           <Stat
             icon={<ArrowDownLeft className="h-4 w-4" />}
             label="Income this month"
@@ -235,7 +235,6 @@ function HomeView({
                       </span>
                     </span>
                   </div>
-                  <Progress value={total > 0 ? (amount / total) * 100 : 0} />
                 </div>
               ))}
             </div>
@@ -419,7 +418,7 @@ function SettingsView({
 function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
     <div className="rounded-2xl bg-primary-foreground/10 p-3">
-      <div className="flex items-center gap-1.5 text-xs opacity-80">
+      <div className="flex items-center gap-1.5 text-xs text-foreground  opacity-80">
         {icon}
         {label}
       </div>
