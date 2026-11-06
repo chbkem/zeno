@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
 import type { User } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, writeBatch } from "firebase/firestore";
 import { fb } from "@/lib/firebase";
+import { formatNumber } from "@/lib/budget";
 import { BudgetStep } from "./onboarding/BudgetStep";
 import { CategoriesStep } from "./onboarding/CategoriesStep";
 import { OnboardingHeader } from "./onboarding/OnboardingHeader";
 import { OnboardingProgress } from "./onboarding/OnboardingProgress";
 import { OnboardingError, OnboardingLoading } from "./onboarding/StatusScreens";
 import { WelcomeStep } from "./onboarding/WelcomeStep";
-import {
-  formatNumber,
-  steps,
-  type Answers,
-  type LoadStatus,
-  type OnboardingDoc,
-} from "./onboarding/config";
+import { steps, type Answers, type LoadStatus, type OnboardingDoc } from "./onboarding/config";
 
 export function Onboarding({ user, onComplete }: { user: User; onComplete: () => void }) {
   const { db } = fb();
@@ -89,7 +84,11 @@ export function Onboarding({ user, onComplete }: { user: User; onComplete: () =>
     setSubmitError("");
 
     try {
-      await setDoc(
+      // Save the plan separately from the onboarding flag so Settings can edit
+      // it later, and write both in one batch so the account never ends up
+      // onboarded without a profile.
+      const batch = writeBatch(db);
+      batch.set(
         doc(db, "users", user.uid, "onboarding", "status"),
         {
           completed: true,
@@ -99,6 +98,16 @@ export function Onboarding({ user, onComplete }: { user: User; onComplete: () =>
         },
         { merge: true },
       );
+      batch.set(
+        doc(db, "users", user.uid, "settings", "profile"),
+        {
+          monthlyBudget: budgetAmount,
+          categories: answers.categories,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
+      await batch.commit();
       onComplete();
     } catch (error) {
       console.error("Failed to complete onboarding:", error);

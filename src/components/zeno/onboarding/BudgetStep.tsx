@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { categories, formatNumber, type Answers } from "./config";
+import { formatNumber } from "@/lib/budget";
+import { categories, type Answers } from "./config";
 
 export function BudgetStep({
   answers,

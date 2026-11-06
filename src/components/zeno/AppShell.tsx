@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import type { User } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { Sparkles } from "lucide-react";
 import { fb, isFirebaseConfigured } from "@/lib/firebase";
 import { AuthScreen } from "./AuthScreen";
 import { Onboarding } from "./Onboarding";
 import { Dashboard, type DashboardPage } from "./Dashboard";
+import { Logo } from "./Logo";
 
 // Firebase's auth listener is the source of truth. This module-level cache only
 // stops the gate from flashing its splash again when it remounts on a tab change.
@@ -18,7 +18,7 @@ let cachedOnboardingDone = false;
 function Splash({ label = "Setting things up..." }: { label?: string }) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background">
-      <Sparkles className="h-10 w-10 animate-pulse text-primary" />
+      <Logo className="h-12 w-12 animate-pulse text-primary" />
       <p className="text-sm text-muted-foreground">{label}</p>
     </div>
   );

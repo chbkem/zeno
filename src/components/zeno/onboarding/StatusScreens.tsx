@@ -1,10 +1,10 @@
-import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Logo } from "../Logo";
 
 export function OnboardingLoading() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background">
-      <Sparkles className="h-10 w-10 animate-pulse text-primary" />
+      <Logo className="h-12 w-12 animate-pulse text-primary" />
       <p className="text-sm text-muted-foreground">Setting things up...</p>
     </div>
   );

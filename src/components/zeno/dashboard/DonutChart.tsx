@@ -1,18 +1,31 @@
 import { formatNaira } from "@/lib/budget";
+import { expenseColorMap, expenseColors } from "./shared";
 
-export function DonutChart({ data }: { data: { name: string; amount: number }[] }) {
+const radius = 70;
+const strokeWidth = 24;
+const gap = 6;
+
+export function DonutChart({
+  data,
+  colors = expenseColorMap(data.map((item) => item.name)),
+}: {
+  data: { name: string; amount: number }[];
+  /** Category colours, keyed by name, so slices match their legend dots. */
+  colors?: Map<string, string>;
+}) {
   const total = data.reduce((sum, item) => sum + item.amount, 0);
-  const radius = 70;
   const circumference = 2 * Math.PI * radius;
 
   let running = 0;
-  const slices = data.map((item, index) => {
+  const slices = data.map((item) => {
     const dash = total > 0 ? (item.amount / total) * circumference : 0;
+    // Tiny slices keep their full arc, otherwise the gap would erase them.
+    const inset = dash > gap * 2 ? gap : 0;
     const slice = {
-      ...item,
-      dash,
-      offset: running,
-      color: `var(--chart-${(index % 5) + 1})`,
+      name: item.name,
+      color: colors.get(item.name) ?? expenseColors[0],
+      dash: Math.max(dash - inset, 0),
+      offset: running + inset / 2,
     };
     running += dash;
     return slice;
@@ -27,7 +40,14 @@ export function DonutChart({ data }: { data: { name: string; amount: number }[] 
         .map((item) => `${item.name} ${formatNaira(item.amount)}`)
         .join(", ")}`}
     >
-      <circle cx="100" cy="100" r={radius} fill="none" stroke="var(--muted)" strokeWidth="24" />
+      <circle
+        cx="100"
+        cy="100"
+        r={radius}
+        fill="none"
+        stroke="var(--muted)"
+        strokeWidth={strokeWidth}
+      />
       {slices.map((slice) => (
         <circle
           key={slice.name}
@@ -36,7 +56,7 @@ export function DonutChart({ data }: { data: { name: string; amount: number }[] 
           r={radius}
           fill="none"
           stroke={slice.color}
-          strokeWidth="24"
+          strokeWidth={strokeWidth}
           strokeDasharray={`${slice.dash} ${circumference - slice.dash}`}
           strokeDashoffset={-slice.offset}
           transform="rotate(-90 100 100)"

@@ -23,8 +23,14 @@ export const EXPENSE_CATEGORIES = [
 
 export const INCOME_CATEGORIES = ["Allowance", "Side Hustle", "Scholarship", "Gift", "Other"];
 
-export const formatNaira = (n: number) =>
-  "₦" + Math.round(n).toLocaleString("en-NG");
+export const formatNaira = (n: number) => "₦" + Math.round(n).toLocaleString("en-NG");
+
+/** Formats digits typed into a money input (e.g. "50000" -> "50,000"). */
+export function formatNumber(value: string): string {
+  const digits = value.replace(/\D/g, "");
+  if (!digits) return "";
+  return Number(digits).toLocaleString("en-NG");
+}
 
 export const monthKey = (date: string) => date.slice(0, 7);
 

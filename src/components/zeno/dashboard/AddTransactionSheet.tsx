@@ -7,36 +7,46 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { fb } from "@/lib/firebase";
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, type TxType } from "@/lib/budget";
+import { INCOME_CATEGORIES, type TxType } from "@/lib/budget";
+import { focusExpenseCategories, orderExpenseCategories } from "@/lib/profile";
 import { today } from "./shared";
 
 export function AddTransactionSheet({
   uid,
   open,
   onOpenChange,
+  focusCategories,
 }: {
   uid: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  focusCategories: string[];
 }) {
+  const orderedExpense = orderExpenseCategories(focusCategories);
   const [type, setType] = useState<TxType>("expense");
   const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState<string>(EXPENSE_CATEGORIES[0]!);
+  const [category, setCategory] = useState<string>(() => orderedExpense[0]!);
   const [note, setNote] = useState("");
   const [date, setDate] = useState(today());
   const [saving, setSaving] = useState(false);
 
-  const cats = type === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+  const focused = type === "expense" ? focusExpenseCategories(focusCategories) : [];
+  const focusSet = new Set(focused);
+  const focusCats = orderedExpense.filter((c) => focusSet.has(c));
+  const otherCats =
+    type === "expense" ? orderedExpense.filter((c) => !focusSet.has(c)) : INCOME_CATEGORIES;
 
   const changeType = (next: TxType) => {
     setType(next);
-    const list = next === "expense" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+    const list = next === "expense" ? orderedExpense : INCOME_CATEGORIES;
     // Keep the current category only if it exists in the new list.
     if (!list.includes(category)) setCategory(list[0]!);
   };
@@ -112,11 +122,24 @@ export function AddTransactionSheet({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {cats.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
-                  </SelectItem>
-                ))}
+                {focusCats.length > 0 && (
+                  <SelectGroup>
+                    <SelectLabel>Your focus</SelectLabel>
+                    {focusCats.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                )}
+                <SelectGroup>
+                  {focusCats.length > 0 && <SelectLabel>All categories</SelectLabel>}
+                  {otherCats.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
               </SelectContent>
             </Select>
           </div>

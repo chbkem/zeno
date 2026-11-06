@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { analyzeSpending } from "@/lib/ai.functions";
 import { summarize, type Transaction } from "@/lib/budget";
+import { focusCategoryLabels, type UserProfile } from "@/lib/profile";
 import { Markdown } from "./Markdown";
 
 export function AIInsights({
@@ -12,11 +13,13 @@ export function AIInsights({
   summary,
   txs,
   budgets,
+  profile,
 }: {
   month: string;
   summary: ReturnType<typeof summarize>;
   txs: Transaction[];
   budgets: Record<string, number>;
+  profile: UserProfile;
 }) {
   const analyze = useServerFn(analyzeSpending);
   const [text, setText] = useState("");
@@ -37,6 +40,10 @@ export function AIInsights({
           balance: summary.balance,
           byCategory: summary.byCategory,
           budgets,
+          profile: {
+            monthlyBudget: profile.monthlyBudget,
+            focusCategories: focusCategoryLabels(profile.categories),
+          },
           recent: txs.map(({ type, amount, category, note, date }) => ({
             type,
             amount,
@@ -49,7 +56,7 @@ export function AIInsights({
       if (!r.ok) toast.error(r.text);
       else setText(r.text);
     } catch {
-      toast.error("Couldn't reach Gemini. Try again.");
+      toast.error("Couldn't reach Zeno AI. Try again.");
     } finally {
       setLoading(false);
     }

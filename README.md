@@ -20,12 +20,13 @@ spending. It installs to your home screen like a native app and still opens when
   through Firestore listeners, no refresh needed.
 - **See the month at a glance** — available balance, income vs. spending, and a donut chart of
   expenses by category on the home screen.
-- **Stay inside your budgets** — set a monthly limit per category and watch progress bars turn
-  amber at 80% and red at 100%.
-- **Get AI advice** — Gemini reads the month's activity and returns a short summary, spending
-  patterns, campus-specific tips (cooking vs. buying food, data bundles, transport) and a
-  number-based target for next month.
+- **Stay inside your budgets** — your onboarding monthly budget powers the overall progress card,
+  and you can set a limit per category and watch progress bars turn amber at 80% and red at 100%.
+- **Get AI advice** — Gemini reads the month's activity plus your monthly budget and focus
+  categories, then returns a short summary, spending patterns, campus-specific tips (cooking vs.
+  buying food, data bundles, transport) and a number-based target for next month.
 - **First-run onboarding** — pick the categories you spend on most and set a starting budget.
+  Both can be changed later in Settings.
 - **Works like an app** — installable PWA, light/dark theme, mobile-first layout with bottom
   navigation.
 
@@ -83,6 +84,7 @@ All user data lives under the signed-in user's document:
 ```
 users/{uid}/transactions/{transactionId}   { type, amount, category, note, date }   // date = YYYY-MM-DD
 users/{uid}/settings/budgets               { "Food & Snacks": 25000, ... }          // one field per category
+users/{uid}/settings/profile               { monthlyBudget, categories }             // onboarding plan, editable in Settings
 users/{uid}/onboarding/status              { completed: true, answers: { categories, budget } }
 ```
 
@@ -122,6 +124,7 @@ src/
   lib/
     ai.functions.ts      server function that talks to Gemini
     budget.ts            transaction types, categories, totals, budget status
+    profile.ts           onboarding plan (monthly budget + focus categories) and AI context
     firebase.ts          Firebase client setup
     pwa.ts               service worker registration + install prompt hook
   routes/                file-based routes: /, /stats, /settings

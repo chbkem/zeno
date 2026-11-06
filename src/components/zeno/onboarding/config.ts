@@ -13,16 +13,7 @@ export type OnboardingDoc = {
   };
 };
 
-export const categories = [
-  { id: "food", label: "Food" },
-  { id: "transport", label: "Transport" },
-  { id: "data", label: "Data/Internet" },
-  { id: "entertainment", label: "Entertainment" },
-  { id: "shopping", label: "Shopping" },
-  { id: "health", label: "Health" },
-  { id: "education", label: "Education" },
-  { id: "other", label: "Other" },
-];
+export { FOCUS_CATEGORIES as categories } from "@/lib/profile";
 
 export const steps = [
   {
@@ -38,9 +29,3 @@ export const steps = [
     text: "Set your monthly budget to get spending alerts before you overspend.",
   },
 ];
-
-export function formatNumber(value: string): string {
-  const digits = value.replace(/\D/g, "");
-  if (!digits) return "";
-  return Number(digits).toLocaleString("en-NG");
-}
